@@ -19,3 +19,4 @@ Resolume Config:
  - Each universe needs to have a UNIQUE UNIVERSE ID
  - Set Output Type" to "IP Address" and use address 239.0.0.57
  - Set frame rate to under 30FPS
+ - Fixtures need to have pixels orderd in RGB,RGB,RGB etc...
