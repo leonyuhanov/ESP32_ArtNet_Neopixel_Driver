@@ -8,8 +8,8 @@
 #include "artNetPacket.h"
 
 //networking
-const char * ssid = "artnetwifi";
-const char * password = "lotsofpixels";
+const char * ssid = "Studio";
+const char * password = "fa5fa5fa55";
 unsigned int artNetPort = 6454;
 const short int maxPacketBufferSize = 530;
 char packetBuffer[maxPacketBufferSize];
@@ -19,10 +19,11 @@ artNetPacket dmxData;
 IPAddress localMulticastIP(239, 0, 0, 57);
 
 //DMX Config
-const byte numberOfDMXUniverses = 5;
-const unsigned short int universeRange[2] = {0,4};  //  [Starting Universe ID, Ending Universe ID] (inclusive)
+const byte numberOfDMXUniverses = 1;
+const unsigned short int universeRange[2] = {0,0};  //  [Starting Universe ID, Ending Universe ID] (inclusive)
 //Set to 1 to only render to the LEDs when ALL DMX frames havea arrived
-byte renderOnlyIfAllFramesArrive = 1;
+byte renderOnlyIfAllFramesArrive = 0;
+byte broadcastReceive = 1;
 
 //modify for dynmic
 byte frameChecks[numberOfDMXUniverses][2];
@@ -54,8 +55,14 @@ void setup()
   Serial.print(WiFi.localIP());
 
   //Set up UDP
-  //udp.begin(WiFi.localIP(), artNetPort);
-  udp.beginMulticast(localMulticastIP, artNetPort);
+  if(broadcastReceive)
+  {
+    udp.begin(WiFi.localIP(), artNetPort);
+  }
+  else
+  {
+    udp.beginMulticast(localMulticastIP, artNetPort);
+  }
   //Init SPI for physical Pixel Driver
   SPI.begin();
   SPI.setBitOrder(MSBFIRST);
