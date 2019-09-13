@@ -7,16 +7,18 @@ A dynamic, generic &amp;  N-pixel ArtNet via WIFI to Neopixel (WS2812, SK6812) d
 
 ESP32 Config Options
   - Set up your WIFI AP/ROUTER to N mode. You "CAN" use ABG or ABGN
-  - Recomemnd using a dedicated WIFI Access Point not connected to any router/switch
-  - Recomend conecting your PC to the PA via a LAN Cable to minimize packat loss
+  - Recomend using a dedicated WIFI Access Point not connected to any router/switch
+  - Recomend conecting your PC to the Access Point via a LAN Cable to minimize packat loss
   - ssid = "WIFI_SSID_NETWORK_NAME";
   - password = "WIFI_PASSWORD";
   - numberOfDMXUniverses : can bet set from 1 to 255 stating the total number of universees you are pushing to this node
   - universeRange[2] : Array Index 0 is the Starting Universe ID, Array Index 1 is the Ending Universe ID. These are inclusive. EG if you are using univesres 0 to 2 inclusive. you would enter universeRange[2] = {0,2} and set numberOfDMXUniverses to 3
   - renderOnlyIfAllFramesArrive : set to 1 will only render data to the pixels when ALL Unverses have been received. Set to 0 and it will render each DMX Universe as they are received
+  - broadcastReceive : Set to 1 to receivd data via UDP BROADCAST. Set to 0 to received via MULTICAS IP 239.0.0.57
   
 Resolume Config:
  - Each universe needs to have a UNIQUE UNIVERSE ID
- - Set Output Type" to "IP Address" and use address 239.0.0.57
+ - If broadcastReceive = 0 Set Output Type" to "IP Address" and use address 239.0.0.57
+ - If broadcastReceive = 1 Set Output Type" to "BROADCAST" ( This works better on some ACCESS POINTS)
  - Set frame rate to under 30FPS
  - Fixtures need to have pixels orderd in RGB,RGB,RGB etc...
