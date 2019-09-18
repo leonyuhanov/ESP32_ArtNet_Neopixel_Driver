@@ -8,8 +8,8 @@
 #include "artNetPacket.h"
 
 //networking
-const char * ssid = "Studio";
-const char * password = "fa5fa5fa55";
+const char * ssid = "WiFi_SSID";
+const char * password = "WiFi_Password";
 unsigned int artNetPort = 6454;
 const short int maxPacketBufferSize = 530;
 char packetBuffer[maxPacketBufferSize];
