@@ -11,14 +11,13 @@ ESP32 Config Options
   - Recomend conecting your PC to the Access Point via a LAN Cable to minimize packat loss
   - ssid = "WIFI_SSID_NETWORK_NAME";
   - password = "WIFI_PASSWORD";
+  - IF YOU ARE MAKING MORE THAN 1 NODE On Line 45 set a different hostname for each one WiFi.setHostname("HOST_NAME_OF_YOUR_CHOOSING");
   - numberOfDMXUniverses : can bet set from 1 to 255 stating the total number of universees you are pushing to this node
   - universeRange[2] : Array Index 0 is the Starting Universe ID, Array Index 1 is the Ending Universe ID. These are inclusive. EG if you are using univesres 0 to 2 inclusive. you would enter universeRange[2] = {0,2} and set numberOfDMXUniverses to 3
   - renderOnlyIfAllFramesArrive : set to 1 will only render data to the pixels when ALL Unverses have been received. Set to 0 and it will render each DMX Universe as they are received
-  - broadcastReceive : Set to 1 to receivd data via UDP BROADCAST. Set to 0 to received via MULTICAS IP 239.0.0.57
   
 Resolume Config:
  - Each universe needs to have a UNIQUE UNIVERSE ID
- - If broadcastReceive = 0 Set Output Type" to "IP Address" and use address 239.0.0.57
- - If broadcastReceive = 1 Set Output Type" to "BROADCAST" ( This works better on some ACCESS POINTS)
- - Set frame rate to under 30FPS
+ - If you are using MANY Nodes -> Set Output Type" to "IP Address" and use the devices IP Address
+ - If you are using 1 Node -> Set Output Type" to "BROADCAST"
  - Fixtures need to have pixels orderd in RGB,RGB,RGB etc...
