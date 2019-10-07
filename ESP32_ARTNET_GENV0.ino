@@ -1,29 +1,28 @@
 /*
-     NODEMCU-32S
+     Tested on the NODEMCU-32S
+     Noopixel Output Pin is  [SPI MOSI]-(PIN 23)-GPIO23 
 */
 #include "SPI.h"
 #include <WiFi.h>
-#include <WiFiUdp.h>
+#include <AsyncUDP.h>
 #include "NeoViaSPI.h"
 #include "artNetPacket.h"
 
 //networking
-const char * ssid = "WiFi_SSID";
-const char * password = "WiFi_Password";
+const char * ssid = "WIFISSID";
+const char * password = "WIFIKEY";
 unsigned int artNetPort = 6454;
 const short int maxPacketBufferSize = 530;
 char packetBuffer[maxPacketBufferSize];
-WiFiUDP udp;
+AsyncUDP udp;
 short int packetSize=0;
 artNetPacket dmxData;
-IPAddress localMulticastIP(239, 0, 0, 57);
 
-//DMX Config
-const byte numberOfDMXUniverses = 1;
-const unsigned short int universeRange[2] = {0,0};  //  [Starting Universe ID, Ending Universe ID] (inclusive)
+//DMX Config - This example is set up for 3 Universes with ids 0,1 & 2
+const byte numberOfDMXUniverses = 3;
+const unsigned short int universeRange[2] = {0,2};  //  [Starting Universe ID, Ending Universe ID] (inclusive)
 //Set to 1 to only render to the LEDs when ALL DMX frames havea arrived
 byte renderOnlyIfAllFramesArrive = 0;
-byte broadcastReceive = 1;
 
 //modify for dynmic
 byte frameChecks[numberOfDMXUniverses][2];
@@ -40,7 +39,6 @@ void setup()
 {
   Serial.begin(115200);
   Serial.print("\r\n\r\n");
-  Serial.print("ArtNet Mode\r\n");
 
   //Eable WIFI
   WiFi.mode(WIFI_STA);
@@ -55,14 +53,10 @@ void setup()
   Serial.print(WiFi.localIP());
 
   //Set up UDP
-  if(broadcastReceive)
-  {
-    udp.begin(WiFi.localIP(), artNetPort);
-  }
-  else
-  {
-    udp.beginMulticast(localMulticastIP, artNetPort);
-  }
+  
+  udp.listen(artNetPort);
+  udp.onPacket(pollDMX);
+   
   //Init SPI for physical Pixel Driver
   SPI.begin();
   SPI.setBitOrder(MSBFIRST);
@@ -89,12 +83,14 @@ void renderLEDs()
 }
 
 //ARTNET STUFF
-void pollDMX()
+void pollDMX(AsyncUDPPacket &packet)
 {
-     packetSize = udp.parsePacket();
+     packetSize = packet.length();
+     //Serial.println(packetSize);
      if(packetSize==maxPacketBufferSize)
      {
-        udp.read(packetBuffer, maxPacketBufferSize);
+        memcpy(packetBuffer, packet.data(), maxPacketBufferSize);
+        //packet.read(packetBuffer, maxPacketBufferSize);
         //Serial.printf("\r\n\tUDP Packet Received for Univirse\t[%d.%d]", packetBuffer[14], packetBuffer[15]);
         //packetBuffer[14] is the UNIVERSE byte check that it is within the range cinfigured above
         if(packetBuffer[14]>=universeRange[0] && packetBuffer[14]<=universeRange[1])
@@ -102,7 +98,7 @@ void pollDMX()
           dmxData.parseArtNetPacket(packetBuffer);
         }
      }
-     udp.flush();
+     //udp.flush();
 }
 
 void artNetToSPI(byte panelID)
@@ -206,7 +202,7 @@ byte checkFrame(byte dmxFrameID)
 void loop()
 {    
     //ArtNet Mode
-    pollDMX();
+    //pollDMX();
     if(dmxData.hasChanged)
     {
       //Serial.printf("\r\n\t\tProcessing DMX DATA For U\t[%d.%d]", dmxData.universe[0],dmxData.universe[1]);
