@@ -1,6 +1,6 @@
 # ESP32_ArtNet_Neopixel_Driver
 
-Note there are seperate projects:
+Note there are 2 seperate implementations:
   - ASYNCUDP uses the ESP32 Async UDP driver, this is faster but I have had issues with stability so treat this as a prototype
   - STDUDP uses the standard ESP32 UDP class & is solid
 
