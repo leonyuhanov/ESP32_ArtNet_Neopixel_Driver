@@ -1,4 +1,9 @@
 # ESP32_ArtNet_Neopixel_Driver
+
+Note there are seperate projects:
+  - ASYNCUDP uses the ESP32 Async UDP driver, this is faster but I have had issues with stability so treat this as a prototype
+  - STDUDP uses the standard ESP32 UDP class & is solid
+
 A dynamic, generic &amp;  N-pixel ArtNet via WIFI to Neopixel (WS2812, SK6812) driver
   - to be used with Resolume Arena 6 (+)
   - Any ESP32 Module
